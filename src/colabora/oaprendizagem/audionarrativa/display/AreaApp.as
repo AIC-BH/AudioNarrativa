@@ -3,6 +3,7 @@ package colabora.oaprendizagem.audionarrativa.display
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import colabora.oaprendizagem.audionarrativa.dados.AudioNarrativa;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
 	/**
@@ -50,6 +51,8 @@ package colabora.oaprendizagem.audionarrativa.display
 		private var _btavancar10:AppButton;
 		private var _btinicio:AppButton;
 		
+		private var _telaPrincipal:Sprite;
+		
 		
 		public function AreaApp() 
 		{
@@ -60,9 +63,13 @@ package colabora.oaprendizagem.audionarrativa.display
 			this._bg.graphics.endFill();
 			this.addChild(this._bg);
 			
+			// preparando telas
+			this._telaPrincipal = new Sprite();
+			this.addChild(this._telaPrincipal);
+			
 			// preparando fundo de imagem de trilhas
 			this._fundoT = new FundoTrilhas();
-			this.addChild(this._fundoT);
+			this._telaPrincipal.addChild(this._fundoT);
 			
 			// preparando trilhas
 			this._trilha0 = new Sprite();
@@ -96,43 +103,43 @@ package colabora.oaprendizagem.audionarrativa.display
 			this._trilha2.y = 2 * AreaApp.BOXSIDE;
 			this._trilhas.addChild(this._trilha2);
 			this._trilhas.y = this._fundoT.y + (AreaApp.BOXSIDE / 2);
-			this.addChild(this._trilhas);
+			this._telaPrincipal.addChild(this._trilhas);
 			
 			// botões
-			this._btinicio = new AppButton(Main.graficos.getGR('BTInicio'), onInicio);
+			this._btinicio = new AppButton(Main.graficos.getGR('BTInicio'), onInicio, false);
 			this._btinicio.x = 0;
 			this._btinicio.y = this._fundoT.y + this._fundoT.height - AreaApp.BOXSIDE;
-			this.addChild(this._btinicio);
+			this._telaPrincipal.addChild(this._btinicio);
 			
 			this._btvoltar10 = new AppButton(Main.graficos.getGR('BTVoltar10'), onVoltar10);
 			this._btvoltar10.x = 1 * AreaApp.BOXSIDE;
 			this._btvoltar10.y = this._fundoT.y + this._fundoT.height - AreaApp.BOXSIDE;
-			this.addChild(this._btvoltar10);
+			this._telaPrincipal.addChild(this._btvoltar10);
 			
 			this._btvoltar = new AppButton(Main.graficos.getGR('BTVoltar'), onVoltar);
 			this._btvoltar.x = 2 * AreaApp.BOXSIDE;
 			this._btvoltar.y = this._fundoT.y + this._fundoT.height - AreaApp.BOXSIDE;
-			this.addChild(this._btvoltar);
+			this._telaPrincipal.addChild(this._btvoltar);
 			
 			this._btavancar = new AppButton(Main.graficos.getGR('BTAvancar'), onAvancar);
 			this._btavancar.x = 3 * AreaApp.BOXSIDE;
 			this._btavancar.y = this._fundoT.y + this._fundoT.height - AreaApp.BOXSIDE;
-			this.addChild(this._btavancar);
+			this._telaPrincipal.addChild(this._btavancar);
 			
 			this._btavancar10 = new AppButton(Main.graficos.getGR('BTAvancar10'), onAvancar10);
 			this._btavancar10.x = 4 * AreaApp.BOXSIDE;
 			this._btavancar10.y = this._fundoT.y + this._fundoT.height - AreaApp.BOXSIDE;
-			this.addChild(this._btavancar10);
+			this._telaPrincipal.addChild(this._btavancar10);
 			
-			this._btplay = new AppButton(Main.graficos.getGR('BTPlay'), onPlay);
+			this._btplay = new AppButton(Main.graficos.getGR('BTPlay'), onPlay, false);
 			this._btplay.x = this._fundoT.x + this._fundoT.width - (2 * AreaApp.BOXSIDE);
 			this._btplay.y = this._fundoT.y + this._fundoT.height - AreaApp.BOXSIDE;
-			this.addChild(this._btplay);
+			this._telaPrincipal.addChild(this._btplay);
 
-			this._btpause = new AppButton(Main.graficos.getGR('BTPause'), onPause);
+			this._btpause = new AppButton(Main.graficos.getGR('BTPause'), onPause, false);
 			this._btpause.x = this._fundoT.x + this._fundoT.width - (1 * AreaApp.BOXSIDE);
 			this._btpause.y = this._fundoT.y + this._fundoT.height - AreaApp.BOXSIDE;
-			this.addChild(this._btpause);
+			this._telaPrincipal.addChild(this._btpause);
 			
 			
 			// preparando elementos
@@ -141,6 +148,12 @@ package colabora.oaprendizagem.audionarrativa.display
 			// posição inicial
 			this.showPos(0);
 			
+			// repetições de botões
+			if (this.stage != null) {
+				this.stage.addEventListener(MouseEvent.MOUSE_UP, fimToque);
+			} else {
+				this.addEventListener(Event.ADDED_TO_STAGE, onStage);
+			}
 		}
 		
 		/**
@@ -246,6 +259,20 @@ package colabora.oaprendizagem.audionarrativa.display
 		{
 			Main.projeto.stop();
 			this.showPos(Main.projeto.tempoAtual);
+		}
+		
+		private function onStage(evt:Event):void
+		{
+			this.stage.addEventListener(MouseEvent.MOUSE_UP, fimToque);
+			this.removeEventListener(Event.ADDED_TO_STAGE, onStage);
+		}
+		
+		private function fimToque(evt:MouseEvent = null):void
+		{
+			this._btavancar.fimToque();
+			this._btavancar10.fimToque();
+			this._btvoltar.fimToque();
+			this._btvoltar10.fimToque();
 		}
 		
 	}
