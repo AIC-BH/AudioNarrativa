@@ -1,11 +1,15 @@
 package colabora.oaprendizagem.audionarrativa.dados 
 {
+	import deng.fzip.FZip;
+	import deng.fzip.FZipEvent;
+	import deng.fzip.FZipFile;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
 	import colabora.oaprendizagem.dados.ObjetoAprendizagem;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
+	import flash.utils.ByteArray;
 	import flash.utils.setInterval;
 	import flash.utils.clearInterval;
 	
@@ -54,8 +58,9 @@ package colabora.oaprendizagem.audionarrativa.dados
 		
 		// VARIÁVEIS PRIVADAS
 		
-		private var _tempo:int = 0;				// tempo atual
-		private var _intervalo:int = -1;		// intervalo da função tocar
+		private var _tempo:int = 0;						// tempo atual
+		private var _intervalo:int = -1;				// intervalo da função tocar
+		private var _pastaTemp:File;					// referência para pasta temporária de importação
 		
 		public function AudioNarrativa() 
 		{
@@ -290,6 +295,190 @@ package colabora.oaprendizagem.audionarrativa.dados
 			this.id = null;
 			this.titulo = null;
 			this.tags = null;
+		}
+		
+		/**
+		 * Exporta o conteúdo do projeto atual na forma de um arquivo binário único compactado.
+		 */
+		public function exportar():void
+		{
+			// salvando o projeto atual
+			this.salvar();
+			// exportando
+			this.exportarID(this.id);
+		}
+		
+		/**
+		 * Exporta o conteúdo do projeto com o ID indicado na forma de um arquivo binário único compactado.
+		 * @param	prID	id do projeto a exportar
+		 * @return	TRUE se o projeto existir e puder ser exportado
+		 */
+		public function exportarID(prID:String):Boolean
+		{
+			// o projeto existe?
+			var pastaProj:File = File.documentsDirectory.resolvePath(ObjetoAprendizagem.codigo + '/projetos/' + prID);
+			if (!pastaProj.isDirectory) {
+				// a pasta do projeto indicado não foi encontrada
+				return (false);
+			} else {
+				// verificando se existe o arquivo de informações do projeto
+				var arqProj:File = pastaProj.resolvePath('projeto.json');
+				if (!arqProj.exists) {
+					// o arquivo de projeto não existe
+					return (false);
+				} else {
+					// o arquivo de projeto está completo?
+					var ok:Boolean = false;
+					var json:Object;
+					var stream:FileStream = new FileStream();
+					stream.open(arqProj, FileMode.READ);
+					var fileData:String = stream.readUTFBytes(stream.bytesAvailable);
+					stream.close();
+					// recuperando o json
+					try {
+						json = JSON.parse(fileData);
+						ok = true;
+					} catch (e:Error) { }
+					// json carregado
+					if ((json.id == null) || (json.titulo == null) || (json.tags == null) || (json.trilha == null)) {
+						// não há informações suficientes
+						return (false);
+					} else {
+						// criando zip e arquivos para exportação
+						var zip:FZip = new FZip();
+						var fileBytes:ByteArray = new ByteArray();
+						// adicionando arquivo de projeto
+						stream.open(pastaProj.resolvePath('projeto.json'), FileMode.READ);
+						fileBytes.clear();
+						stream.readBytes(fileBytes);
+						stream.close();
+						zip.addFile((prID + '/projeto.json'), fileBytes);
+						// adicionando arquivos de áudio
+						var audioFiles:Array = pastaProj.resolvePath('audios').getDirectoryListing();
+						for (var indice:int = 0; indice < audioFiles.length; indice++) {
+							var arquivoAudio:File = audioFiles[indice] as File;
+							stream.open(arquivoAudio, FileMode.READ);
+							fileBytes.clear();
+							stream.readBytes(fileBytes);
+							stream.close();
+							zip.addFile((prID + '/audios/' + arquivoAudio.name), fileBytes);
+						}
+						// finalizando o arquivo zip
+						stream.open(File.documentsDirectory.resolvePath(json.titulo + '.narraudio'), FileMode.WRITE);
+						zip.serialize(stream);
+						stream.close();
+						return (true);
+					}
+				}
+			}
+		}
+		
+		/**
+		 * Importa o conteúdo de um projeto binário compactado.
+		 * @param	origem	link para o local do arquivo binário
+		 * @return	TRUE se o arquivo existir e puder ser aberto
+		 */
+		public function importar(origem:File):Boolean
+		{
+			// abrindo arquivo de origem
+			if (origem.exists) {
+				// criando pasta temporária de importação
+				this._pastaTemp = File.createTempDirectory();
+				// recuperando informações do arquivo
+				var stream:FileStream = new FileStream();
+				var fileBytes:ByteArray = new ByteArray();
+				stream.open(origem, FileMode.READ);
+				fileBytes.clear();
+				stream.readBytes(fileBytes);
+				stream.close();
+				// abrindo zip
+				var zip:FZip = new FZip();
+				zip.addEventListener(FZipEvent.FILE_LOADED, onZipLoaded);
+				zip.addEventListener(Event.COMPLETE, onUnzipComplete);
+				zip.loadBytes(fileBytes);
+				// começando importação
+				return (true);
+			} else {
+				// o arquivo indicado não foi encontrado
+				return (false);
+			}
+		}
+		
+		
+		
+		/**
+		 * Um arquivo dentro do zip de importação foi retirado.
+		 */
+		private function onZipLoaded(evt:FZipEvent):void
+		{
+			var zipfile:FZipFile = evt.file;
+			if (zipfile.sizeUncompressed == 0) {
+				// arquivo sem dados: não recriar
+			} else {
+				// descompactando o arquivo em disco
+				var stream:FileStream = new FileStream();
+				stream.open(this._pastaTemp.resolvePath(zipfile.filename), FileMode.WRITE);
+				stream.writeBytes(zipfile.content);
+				stream.close();
+			}
+		}
+		
+		/**
+		 * Todos os arquivos dentro do zip de importação foram extraídos.
+		 */
+		private function onUnzipComplete(evt:Event):void
+		{
+			// liberando arquivo zip
+			var zip:FZip = evt.target as FZip;
+			zip.removeEventListener(FZipEvent.FILE_LOADED, onZipLoaded);
+			zip.removeEventListener(Event.COMPLETE, onUnzipComplete);
+			// verificando integridade do projeto
+			var pastas:Array = this._pastaTemp.getDirectoryListing();
+			if (pastas.length != 1) {
+				// o arquivo descompactado não contém uma única pasta: não é uma exportação válida
+				this.dispatchEvent(new Event(Event.CANCEL));
+			} else {
+				// verificando a pasta de projeto encontrada
+				var pastaProjeto:File = pastas[0] as File;
+				if (!pastaProjeto.isDirectory) {
+					// não há uma pasta recuperada de projeto
+					this.dispatchEvent(new Event(Event.CANCEL));
+				} else {
+					// verificando se há um arquivo de projeto
+					var arquivoProjeto:File = pastaProjeto.resolvePath('projeto.json');
+					if (!arquivoProjeto.exists) {
+						// não há um arquivo de projeto
+						this.dispatchEvent(new Event(Event.CANCEL));
+					} else {
+						// o arquivo é um json válido?
+						var stream:FileStream = new FileStream();
+						stream.open(arquivoProjeto, FileMode.READ);
+						var fdata:String = stream.readUTFBytes(stream.bytesAvailable);
+						stream.close();
+						var ok:Boolean = false;
+						var json:Object;
+						try {
+							json = JSON.parse(fdata);
+							ok = true;
+						} catch (e:Error) { }
+						if (!ok) {
+							// o arquivo não traz um json válido
+							this.dispatchEvent(new Event(Event.CANCEL));
+						} else {
+							if ((json.id == null) || (json.titulo == null) || (json.tags == null) || (json.trilha == null)) {
+								// o arquivo json não traz as informações necessárias
+								this.dispatchEvent(new Event(Event.CANCEL));
+							} else {
+								// projeto ok: copiar para a pasta de documentos
+								pastaProjeto.moveTo(File.documentsDirectory.resolvePath(ObjetoAprendizagem.codigo + '/projetos/' + json.id), true);
+								this.dispatchEvent(new Event(Event.COMPLETE));
+							}
+						}
+					}
+				}
+			}
+			// apagando pasta temporária
+			this._pastaTemp.deleteDirectory(true);
 		}
 		
 		// FUNÇÕES PRIVADAS

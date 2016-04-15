@@ -8,6 +8,7 @@ package
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.filesystem.File;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
 	import graphic.Graficos;
@@ -68,7 +69,10 @@ package
 			this.appView.desenhaTrilhas();
 			Main.projeto.play();
 			
+			trace ('pasta', Main.projeto.pasta.url);
+			Main.projeto.exportar();
 			
+			//Main.projeto.importar(File.documentsDirectory.resolvePath('algum título.narraudio'));
 			
 			// atualizando display do app sempre que houver mudança na tela
 			this.stage.addEventListener(Event.RESIZE, stageResize);
