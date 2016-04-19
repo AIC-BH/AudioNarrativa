@@ -3,6 +3,9 @@
 :: Set working dir
 cd %~dp0 & cd ..
 
+:: ane folder
+set EXTINCLUDE=-extdir ext/
+
 if "%PLATFORM%"=="android" goto android-config
 if "%PLATFORM%"=="ios" goto ios-config
 if "%PLATFORM%"=="ios-dist" goto ios-dist-config
@@ -44,7 +47,7 @@ set OUTPUT=%DIST_PATH%\%DIST_NAME%%TARGET%.%DIST_EXT%
 echo Packaging: %OUTPUT%
 echo using certificate: %CERT_FILE%...
 echo.
-call adt -package -target %TYPE%%TARGET% %OPTIONS% %SIGNING_OPTIONS% "%OUTPUT%" "%APP_XML%" %FILE_OR_DIR%
+call adt -package -target %TYPE%%TARGET% %OPTIONS% %SIGNING_OPTIONS% "%OUTPUT%" "%APP_XML%" %FILE_OR_DIR% %EXTINCLUDE%
 echo.
 if errorlevel 1 goto failed
 goto end

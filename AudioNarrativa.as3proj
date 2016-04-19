@@ -6,8 +6,8 @@
     <movie input="" />
     <movie path="bin\AudioNarrativa.swf" />
     <movie fps="30" />
-    <movie width="480" />
-    <movie height="762" />
+    <movie width="800" />
+    <movie height="480" />
     <movie version="18" />
     <movie minorVersion="0" />
     <movie platform="AIR Mobile" />
@@ -55,6 +55,9 @@
   <libraryPaths>
     <element path="..\..\OAprendizagem\LibColabora\src\copilados\fzip.swc" />
     <element path="..\..\OAprendizagem\LibColabora\src\compilados\fzip.swc" />
+    <element path="..\..\OAprendizagem\LibColabora\src\compilados\ZBar.swc" />
+    <element path="..\..\OAprendizagem\LibColabora\src\compilados\ZXing.swc" />
+    <element path="ext\ZXing.ane" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

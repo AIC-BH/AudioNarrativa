@@ -299,33 +299,34 @@ package colabora.oaprendizagem.audionarrativa.dados
 		
 		/**
 		 * Exporta o conteúdo do projeto atual na forma de um arquivo binário único compactado.
+		 * @return	o nome do arquivo exportado ou string vazia no caso de erro
 		 */
-		public function exportar():void
+		public function exportar():String
 		{
 			// salvando o projeto atual
 			this.salvar();
 			// exportando
-			this.exportarID(this.id);
+			return(this.exportarID(this.id));
 		}
 		
 		/**
 		 * Exporta o conteúdo do projeto com o ID indicado na forma de um arquivo binário único compactado.
 		 * @param	prID	id do projeto a exportar
-		 * @return	TRUE se o projeto existir e puder ser exportado
+		 * @return	o nome do arquivo exportado ou string vazia no caso de erro
 		 */
-		public function exportarID(prID:String):Boolean
+		public function exportarID(prID:String):String
 		{
 			// o projeto existe?
 			var pastaProj:File = File.documentsDirectory.resolvePath(ObjetoAprendizagem.codigo + '/projetos/' + prID);
 			if (!pastaProj.isDirectory) {
 				// a pasta do projeto indicado não foi encontrada
-				return (false);
+				return ('');
 			} else {
 				// verificando se existe o arquivo de informações do projeto
 				var arqProj:File = pastaProj.resolvePath('projeto.json');
 				if (!arqProj.exists) {
 					// o arquivo de projeto não existe
-					return (false);
+					return ('');
 				} else {
 					// o arquivo de projeto está completo?
 					var ok:Boolean = false;
@@ -342,7 +343,7 @@ package colabora.oaprendizagem.audionarrativa.dados
 					// json carregado
 					if ((json.id == null) || (json.titulo == null) || (json.tags == null) || (json.trilha == null)) {
 						// não há informações suficientes
-						return (false);
+						return ('');
 					} else {
 						// criando zip e arquivos para exportação
 						var zip:FZip = new FZip();
@@ -364,10 +365,18 @@ package colabora.oaprendizagem.audionarrativa.dados
 							zip.addFile((prID + '/audios/' + arquivoAudio.name), fileBytes);
 						}
 						// finalizando o arquivo zip
-						stream.open(File.documentsDirectory.resolvePath(json.titulo + '.narraudio'), FileMode.WRITE);
+						var nomeArquivo:String;
+						if (json.titulo == '') {
+							var data:Date = new Date();
+							nomeArquivo = data.date + '-' + (data.month + 1) + '-' + data.fullYear + '.narraudio';
+						} else {
+							nomeArquivo = json.titulo + '.narraudio';
+						}
+						if (!File.documentsDirectory.resolvePath(ObjetoAprendizagem.codigo + '/exportados').isDirectory) File.documentsDirectory.resolvePath(ObjetoAprendizagem.codigo + '/exportados').createDirectory();
+						stream.open(File.documentsDirectory.resolvePath(ObjetoAprendizagem.codigo + '/exportados/' + nomeArquivo), FileMode.WRITE);
 						zip.serialize(stream);
 						stream.close();
-						return (true);
+						return (nomeArquivo);
 					}
 				}
 			}

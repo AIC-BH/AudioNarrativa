@@ -1,8 +1,11 @@
 package
 {
+	import colabora.display.Compartilhamento;
 	import colabora.oaprendizagem.audionarrativa.dados.AudioNarrativa;
 	import colabora.oaprendizagem.audionarrativa.display.AreaApp;
 	import colabora.oaprendizagem.servidor.Servidor;
+	import colabora.qrcode.QrCodeReader;
+	import com.google.zxing.qrcode.QRCodeReader;
 	import flash.desktop.NativeApplication;
 	import flash.events.Event;
 	import flash.display.Sprite;
@@ -44,21 +47,28 @@ package
 			stage.addEventListener(Event.DEACTIVATE, deactivate);
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			
+			// preparando acesso aos gráficos
+			Main.graficos = new Graficos();
+			
+			// texto de ajuda sobre compartilhamento
+			var textoSobre:String = '<b>Como compartilhar?</b><br />Para compartilhar...';
+			
 			// configurando app
 			ObjetoAprendizagem.codigo = 'audionarrativas';
 			ObjetoAprendizagem.nome = 'Áudio narrativas';
-			ObjetoAprendizagem.urlServidor = 'http://localhost/oaprendizagem/web/';
-			ObjetoAprendizagem.servidor = new Servidor();
-			
-			// preparando acesso aos gráficos
-			Main.graficos = new Graficos();
+			ObjetoAprendizagem.compartilhamento = new Compartilhamento(
+													Main.graficos.getSPGR('BTCompScan'),
+													Main.graficos.getSPGR('BTCompFechar'), 
+													Main.graficos.getSPGR('BTCompVoltar'), 
+													Main.graficos.getSPGR('BTCompAjuda'), 
+													textoSobre, 
+													Main.graficos.getSPGR('MensagemErroDownload'), 
+													Main.graficos.getSPGR('MensagemSucessoDownload'), 
+													Main.graficos.getSPGR('MensagemAguardeDownload'));
 			
 			// criando o projeto atual
 			Main.projeto = new AudioNarrativa();
 			Main.projeto.addEventListener(Event.CHANGE, somAtualizado);
-			
-			
-			
 			
 			// criando visualização do app
 			this.appView = new AreaApp();
@@ -67,16 +77,14 @@ package
 			
 			Main.projeto.carregaProjeto('primeiroprojeto');
 			this.appView.desenhaTrilhas();
-			Main.projeto.play();
-			
-			trace ('pasta', Main.projeto.pasta.url);
-			Main.projeto.exportar();
-			
-			//Main.projeto.importar(File.documentsDirectory.resolvePath('algum título.narraudio'));
 			
 			// atualizando display do app sempre que houver mudança na tela
 			this.stage.addEventListener(Event.RESIZE, stageResize);
-			
+		}
+		
+		private function qrParser(value:String):void
+		{
+			trace ('recebido', value);
 		}
 		
 		private function stageResize(evt:Event):void
