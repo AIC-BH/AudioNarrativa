@@ -12,11 +12,26 @@ package colabora.oaprendizagem.audionarrativa.display
 	public class AreaCheia extends Sprite
 	{
 		
+		// VARIÁVEIS PRIVADAS
+		
 		private var _bgs:Vector.<Bitmap>;
 		private var _tx:TextField;
+		private var _tr:int;
+		private var _dr:int;
+		private var _tp:int;
 		
+		/**
+		 * Construtor.
+		 * @param	tr	trilha
+		 * @param	dr	duração em segundos
+		 * @param	tt	nome do áudio
+		 * @param	tp	tempo onde o áudio foi incluído
+		 */
 		public function AreaCheia(tr:int, dr:int, tt:String, tp:int) 
 		{
+			this._tr = tr;
+			this._dr = dr;
+			this._tp = tp;
 			this._bgs = new Vector.<Bitmap>();
 			// adicionando blocos de acordo com a duração
 			if (dr == 1) {
@@ -72,6 +87,33 @@ package colabora.oaprendizagem.audionarrativa.display
 			
 		}
 		
+		// VALORES SOMENTE LEITURA
+		
+		/**
+		 * Trilha do áudio.
+		 */
+		public function get track():int { return (this._tr); }
+		
+		/**
+		 * Duração do áudio.
+		 */
+		public function get duracao():int { return (this._dr); }
+		
+		/**
+		 * Nome do áudio.
+		 */
+		public function get nome():String { return (this._tx.text); }
+		
+		/**
+		 * Tempo de inclusão do áudio.
+		 */
+		public function get tempo():int { return (this._tp); }
+		
+		// FUNÇÕES PÚBLICAS
+		
+		/**
+		 * Libera recursos usados por este objeto.
+		 */
 		public function dispose():void
 		{
 			this.removeChildren();

@@ -58,6 +58,7 @@
     <element path="..\..\OAprendizagem\LibColabora\src\compilados\ZBar.swc" />
     <element path="..\..\OAprendizagem\LibColabora\src\compilados\ZXing.swc" />
     <element path="ext\ZXing.ane" />
+    <element path="..\..\OAprendizagem\LibColabora\src\compilados\shineMP3_alchemy.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

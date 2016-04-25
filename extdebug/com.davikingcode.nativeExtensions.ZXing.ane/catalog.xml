@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<swc xmlns="http://www.adobe.com/flash/swccatalog/9">
+    <versions>
+        <swc version="1.2"/>
+        <compiler name="ActionScript Compiler" version="2.0.0" build="354145"/>
+    </versions>
+    <features>
+        <feature-script-deps/>
+    </features>
+    <libraries>
+        <library path="library.swf">
+            <script name="com/davikingcode/nativeExtensions/zxing/ZXing" mod="1404231000000">
+                <def id="com.davikingcode.nativeExtensions.zxing:ZXing"/>
+                <dep id="Error" type="e"/>
+                <dep id="Function" type="s"/>
+                <dep id="com.davikingcode.nativeExtensions.zxing:ZXingEvent" type="e"/>
+                <dep id="flash.display:BitmapData" type="s"/>
+                <dep id="flash.events:EventDispatcher" type="i"/>
+                <dep id="flash.events:StatusEvent" type="s"/>
+                <dep id="flash.external:ExtensionContext" type="s"/>
+            </script>
+            <script name="com/davikingcode/nativeExtensions/zxing/ZXingEvent" mod="1403621185000">
+                <def id="com.davikingcode.nativeExtensions.zxing:ZXingEvent"/>
+                <dep id="Boolean" type="s"/>
+                <dep id="String" type="s"/>
+                <dep id="flash.events:Event" type="i"/>
+            </script>
+            <digests>
+                <digest type="SHA-256" signed="false" value="03acc12b4ed4696a98c85a305f099b5ac2d0b72b1721299c249d5c6156148058"/>
+            </digests>
+        </library>
+    </libraries>
+</swc>

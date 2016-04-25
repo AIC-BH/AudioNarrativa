@@ -132,6 +132,27 @@ package colabora.oaprendizagem.audionarrativa.dados
 		}
 		
 		/**
+		 * Remove um áudio registrado.
+		 * @param	tp	o tempo em que o áudio está colocado
+		 * @return	TRUE se um áudio for encontrado no tempo definido e puder ser removido
+		 */
+		public function removeAudio(tp:int):Boolean
+		{
+			var encontrado:int = -1;
+			for (var i:int = 0; i < this.audio.length; i++) {
+				if (this.audio[i].tempo == tp) encontrado = i;
+			}
+			if (encontrado >= 0) {
+				this.audio[encontrado].dispose();
+				this.audio.splice(encontrado, 1);
+				this.acertaVAudios();
+				return (true);
+			} else {
+				return (false);
+			}
+		}
+		
+		/**
 		 * Acerta os valores de posição dos audios de acordo com o vetor de informações.
 		 */
 		public function acertaVAudios():void
@@ -225,6 +246,7 @@ package colabora.oaprendizagem.audionarrativa.dados
 				this._channel.removeEventListener(Event.SOUND_COMPLETE, canalCompleto);
 				this._channel.stop();
 			}
+			this.volume = 1;
 		}
 		
 		/**

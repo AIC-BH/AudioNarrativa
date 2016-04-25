@@ -65,7 +65,7 @@ package colabora.oaprendizagem.audionarrativa.dados
 		public function AudioNarrativa() 
 		{
 			// criando id
-			this.id = String(new Date().getTime());
+			this.id = String(new Date().getTime()) + String(Math.random() * 1000) + String(Math.random() * 1000) + String(Math.random() * 1000)
 			// título e tags
 			this.titulo = '';
 			this.tags = '';
@@ -189,6 +189,22 @@ package colabora.oaprendizagem.audionarrativa.dados
 		}
 		
 		/**
+		 * Remove um áudio de uma trilha.
+		 * @param	tr	a trilha a ser alterada
+		 * @param	tp	o tempo do áudio a ser removido
+		 * @return	TRUE se um áudio for encontrado no tempo definido e puder ser removido
+		 */
+		public function removeAudio(tr:int, tp:int):Boolean
+		{
+			if ((tr >= 0) && (tr <= (AudioNarrativa.NUMTRILHAS - 1))) {
+				return(this.trilha[tr].removeAudio(tp));
+			} else {
+				// trilha não encontrada
+				return (false);
+			}
+		}
+		
+		/**
 		 * Define um novo id para o projeto atual.
 		 * @param	novoID	o novo id
 		 * @param	renomear	renomear a pasta já existente com o id atual para o novo?
@@ -271,7 +287,7 @@ package colabora.oaprendizagem.audionarrativa.dados
 		public function clear():void
 		{
 			// recriando id
-			this.id = String(new Date().getTime());
+			this.id = String(new Date().getTime()) + String(Math.random() * 1000) + String(Math.random() * 1000) + String(Math.random() * 1000);
 			// título e tags
 			this.titulo = '';
 			this.tags = '';

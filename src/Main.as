@@ -75,8 +75,8 @@ package
 			this.addChild(this.appView);
 			this.appView.posiciona();
 			
-			Main.projeto.carregaProjeto('primeiroprojeto');
-			this.appView.desenhaTrilhas();
+			//Main.projeto.carregaProjeto('primeiroprojeto');
+			//this.appView.desenhaTrilhas();
 			
 			// atualizando display do app sempre que houver mudança na tela
 			this.stage.addEventListener(Event.RESIZE, stageResize);

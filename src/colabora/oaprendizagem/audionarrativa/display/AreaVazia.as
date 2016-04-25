@@ -35,6 +35,8 @@ package colabora.oaprendizagem.audionarrativa.display
 			this.mouseChildren = false;
 		}
 		
+		// FUNÇÕES PÚBLICAS
+		
 		/**
 		 * Libera recursos usados por este objeto.
 		 */

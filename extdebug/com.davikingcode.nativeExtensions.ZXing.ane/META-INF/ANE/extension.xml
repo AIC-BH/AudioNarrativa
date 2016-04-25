@@ -1,0 +1,30 @@
+<extension xmlns="http://ns.adobe.com/air/extension/3.5">
+	<id>com.davikingcode.nativeExtensions.ZXing</id>
+	<versionNumber>0.2</versionNumber>
+	<platforms>
+		<platform name="iPhone-ARM">
+			<applicationDeployment>
+				<nativeLibrary>libZXingIosExtension.a</nativeLibrary>
+				<initializer>ZXingExtensionInitializer</initializer>
+				<finalizer>ZXingExtensionFinalizer</finalizer>
+			</applicationDeployment>
+		</platform>
+		<platform name="Android-ARM">
+			<applicationDeployment>
+				<nativeLibrary>ZXingAndroidExtension.jar</nativeLibrary>
+				<initializer>com.davikingcode.nativeExtensions.zxing.ZXingExtension</initializer>
+				<finalizer>com.davikingcode.nativeExtensions.zxing.ZXingExtension</finalizer>
+			</applicationDeployment>
+		</platform>
+		<platform name="Android-x86">
+			<applicationDeployment>
+				<nativeLibrary>ZXingAndroidExtension.jar</nativeLibrary>
+				<initializer>com.davikingcode.nativeExtensions.zxing.ZXingExtension</initializer>
+				<finalizer>com.davikingcode.nativeExtensions.zxing.ZXingExtension</finalizer>
+			</applicationDeployment>
+		</platform>
+		<platform name="default">
+			<applicationDeployment/>
+		</platform>
+	</platforms>
+</extension>

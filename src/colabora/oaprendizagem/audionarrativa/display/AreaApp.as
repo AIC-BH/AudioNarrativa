@@ -7,8 +7,10 @@ package colabora.oaprendizagem.audionarrativa.display
 	import flash.display.Sprite;
 	import colabora.oaprendizagem.audionarrativa.dados.AudioNarrativa;
 	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
+	import flash.net.FileFilter;
 	
 	/**
 	 * ...
@@ -46,6 +48,8 @@ package colabora.oaprendizagem.audionarrativa.display
 		private var _trilha1:Sprite;					// display da segunda trilha de botões
 		private var _trilha2:Sprite;					// display da terceira trilha de botões
 		private var _elementos:Vector.<AreaCheia>;		// elementos de áudio das trilhas
+		private var _audioAtual:AreaCheia;				// referência ao último elemento de áudio clicado
+		private var _audioNova:AreaVazia;				// referência à última área de inclusão de áudio clicada
 		
 		private var _btplay:AppButton;
 		private var _btpause:AppButton;
@@ -58,9 +62,17 @@ package colabora.oaprendizagem.audionarrativa.display
 		private var _telaPrincipal:Sprite;
 		private var _telaEscolha:EscolhaProjeto;
 		private var _telaMensagem:TelaMensagem;
+		private var _incluiAudio:JanelaIncluiAudio;
+		private var _removeAudio:JanelaRemoveAudio;
+		private var _telaBiblioteca:TelaBiblioteca;
+		private var _telaMeusAudios:TelaMeusAudios;
+		private var _telaGravacao:TelaGravacao;
+		private var _telaInfo:TelaInfo;
 		
 		private var _acoes:ActionArea;
 		private var _acAtual:String = '';
+		
+		private var _navegaProjeto:File;
 		
 		
 		public function AreaApp() 
@@ -160,6 +172,7 @@ package colabora.oaprendizagem.audionarrativa.display
 			this._acoes.acSalvar = this.acSalvar;
 			this._acoes.acCompartilhar = this.acCompartilhar;
 			this._acoes.acReceber = this.acReceber;
+			this._acoes.acInfo = this.acInfo;
 			
 			// preparando elementos
 			this._elementos = new Vector.<AreaCheia>();
@@ -178,9 +191,17 @@ package colabora.oaprendizagem.audionarrativa.display
 			this._telaEscolha = new EscolhaProjeto('Escolha o projeto',
 													Main.graficos.getSPGR('BTOk'),
 													Main.graficos.getSPGR('BTCancel'),
+													Main.graficos.getSPGR('BTAbrir'),
 													File.documentsDirectory.resolvePath(ObjetoAprendizagem.codigo + '/projetos/' ));
 			this._telaEscolha.addEventListener(Event.COMPLETE, onEscolhaOK);
 			this._telaEscolha.addEventListener(Event.CANCEL, onEscolhaCancel);
+			this._telaEscolha.addEventListener(Event.OPEN, onEscolhaOpen);
+			
+			// navegação para importar projeto
+			this._navegaProjeto = File.documentsDirectory;
+			this._navegaProjeto.addEventListener(Event.SELECT, onNavegadorPSelect);
+			this._navegaProjeto.addEventListener(Event.CANCEL, onNavegadorPFim);
+			this._navegaProjeto.addEventListener(IOErrorEvent.IO_ERROR, onNavegadorPFim);
 			
 			// tela de mensagens
 			this._telaMensagem = new TelaMensagem(Main.graficos.getSPGR('BTOk'),
@@ -197,6 +218,34 @@ package colabora.oaprendizagem.audionarrativa.display
 			// importação de projetos
 			Main.projeto.addEventListener(Event.CANCEL, onImportCancel);
 			Main.projeto.addEventListener(Event.COMPLETE, onImportComplete);
+			
+			// inclusão e remoção de áudio
+			this._incluiAudio = new JanelaIncluiAudio(AreaApp.AREAWIDTH, AreaApp.AREAHEIGHT);
+			this._incluiAudio.addEventListener('biblioteca', onIncluiBiblioteca);
+			this._incluiAudio.addEventListener('meusaudios', onIncluiMeusAudios);
+			this._removeAudio = new JanelaRemoveAudio(AreaApp.AREAWIDTH, AreaApp.AREAHEIGHT);
+			this._removeAudio.addEventListener(Event.COMPLETE, onRemoveSim);
+			this._removeAudio.addEventListener(Event.CLOSE, onRemoveNao);
+			
+			// biblioteca de áudios
+			this._telaBiblioteca = new TelaBiblioteca();
+			this._telaBiblioteca.addEventListener(Event.CANCEL, onBibliotecaCancel);
+			this._telaBiblioteca.addEventListener(Event.SELECT, onBibliotecaSelect);
+			
+			// meus áudios
+			this._telaMeusAudios = new TelaMeusAudios();
+			this._telaMeusAudios.addEventListener(Event.CANCEL, onMeusAudiosCancel);
+			this._telaMeusAudios.addEventListener(Event.SELECT, onMeusAudiosSelect);
+			this._telaMeusAudios.addEventListener('gravar', onGravar);
+			
+			// gravação de áudio
+			this._telaGravacao = new TelaGravacao(AreaApp.AREAWIDTH, AreaApp.AREAHEIGHT);
+			this._telaGravacao.addEventListener(Event.CANCEL, onGravacaoCancel);
+			this._telaGravacao.addEventListener(Event.COMPLETE, onGravacaoComplete);
+			
+			// informações sobre o projeto
+			this._telaInfo = new TelaInfo(AreaApp.AREAWIDTH, AreaApp.AREAHEIGHT);
+			this._telaInfo.addEventListener(Event.COMPLETE, onInfoComplete);
 		}
 		
 		/**
@@ -236,6 +285,7 @@ package colabora.oaprendizagem.audionarrativa.display
 		{
 			while (this._elementos.length > 0) {
 				this._elementos[0].parent.removeChild(this._elementos[0]);
+				this._elementos[0].removeEventListener(MouseEvent.CLICK, cliqueAudio);
 				this._elementos.shift().dispose();
 			}
 			var area:AreaCheia;
@@ -244,18 +294,21 @@ package colabora.oaprendizagem.audionarrativa.display
 				area = new AreaCheia(0, Main.projeto.trilha[0].audio[i].duracao, Main.projeto.trilha[0].audio[i].titulo, Main.projeto.trilha[0].audio[i].tempo);
 				this._trilha0.addChild(area);
 				this._elementos.push(area);
+				area.addEventListener(MouseEvent.CLICK, cliqueAudio);
 			}
 			// trilha 1
 			for (i = 0; i < Main.projeto.trilha[1].audio.length; i++) {
 				area = new AreaCheia(1, Main.projeto.trilha[1].audio[i].duracao, Main.projeto.trilha[1].audio[i].titulo, Main.projeto.trilha[1].audio[i].tempo);
 				this._trilha1.addChild(area);
 				this._elementos.push(area);
+				area.addEventListener(MouseEvent.CLICK, cliqueAudio);
 			}
 			// trilha 2
 			for (i = 0; i < Main.projeto.trilha[2].audio.length; i++) {
 				area = new AreaCheia(2, Main.projeto.trilha[2].audio[i].duracao, Main.projeto.trilha[2].audio[i].titulo, Main.projeto.trilha[2].audio[i].tempo);
 				this._trilha2.addChild(area);
 				this._elementos.push(area);
+				area.addEventListener(MouseEvent.CLICK, cliqueAudio);
 			}
 		}
 		
@@ -266,8 +319,19 @@ package colabora.oaprendizagem.audionarrativa.display
 		 */
 		private function cliqueVazia(evt:MouseEvent):void
 		{
-			var clicada:AreaVazia = evt.target as AreaVazia;
-			trace ('clique em', clicada.trilha, clicada.tempo);
+			this._audioNova = evt.target as AreaVazia;
+			Main.projeto.pause();
+			this.addChild(this._incluiAudio);
+		}
+		
+		/**
+		 * Clique em uma área de áudio nas trilhas.
+		 */
+		private function cliqueAudio(evt:MouseEvent):void
+		{
+			this._audioAtual = evt.target as AreaCheia;
+			this._removeAudio.mostraAudio(this._audioAtual.nome, this._audioAtual.track, this._audioAtual.duracao);
+			this.addChild(this._removeAudio);
 		}
 		
 		/**
@@ -426,6 +490,39 @@ package colabora.oaprendizagem.audionarrativa.display
 		}
 		
 		/**
+		 * O botão abrir foi escolhido na tela de listagem de projetos.
+		 */
+		private function onEscolhaOpen(evt:Event):void
+		{
+			this._telaEscolha.mostrarMensagem('Localizando e importanto um arquivo de projeto.');
+			this._navegaProjeto.browseForOpen('Projetos de Narrativa de Áudio', [new FileFilter('arquivos de projeto', '*.narraudio')]);
+		}
+		
+		/**
+		 * Navegação por arquivo terminada sem nenhuma escolha.
+		 */
+		private function onNavegadorPFim(evt:Event):void
+		{
+			// refazendo a listagem
+			this._telaEscolha.listar();
+		}
+		
+		/**
+		 * Recebendo um arquivo de projeto selecionado.
+		 */
+		private function onNavegadorPSelect(evt:Event):void
+		{
+			// importando
+			if (Main.projeto.importar(this._navegaProjeto)) {
+				// aguardar importação
+				this.stage.removeChild(this._telaEscolha);
+			} else {
+				// somentar listar novamente
+				this._telaEscolha.listar();
+			}
+		}
+		
+		/**
 		 * O notão OK da tela de mensagem foi clicado.
 		 */
 		private function onMensagemOK(evt:Event):void
@@ -529,6 +626,140 @@ package colabora.oaprendizagem.audionarrativa.display
 		}
 		
 		/**
+		 * Remoção do áudio confirmada.
+		 */
+		private function onRemoveSim(evt:Event):void
+		{
+			if (this._audioAtual != null) {
+				if (Main.projeto.removeAudio(this._audioAtual.track, this._audioAtual.tempo)) {
+					this._audioAtual.parent.removeChild(this._audioAtual);
+					var encontrado:int = -1;
+					for (var i:int = 0; i < this._elementos.length; i++) {
+						if (this._elementos[i] == this._audioAtual) encontrado = i;
+					}
+					if (encontrado >= 0) this._elementos.splice(encontrado, 1);
+					this._audioAtual.dispose();
+				}
+				this._audioAtual = null;
+			}
+		}
+		
+		/**
+		 * Remoção do áudio negada.
+		 */
+		private function onRemoveNao(evt:Event):void
+		{
+			this._audioAtual = null;
+		}
+		
+		/**
+		 * Incluindo áudio a partir da biblioteca.
+		 */
+		private function onIncluiBiblioteca(evt:Event):void
+		{
+			this.removeChild(this._telaPrincipal);
+			this.stage.addChild(this._telaBiblioteca);
+		}
+		
+		/**
+		 * Incluindo áudio próprio.
+		 */
+		private function onIncluiMeusAudios(evt:Event):void
+		{
+			this.removeChild(this._telaPrincipal);
+			this._telaMeusAudios.pasta = Main.projeto.pasta.resolvePath('audios');
+			this.stage.addChild(this._telaMeusAudios);
+		}
+		
+		/**
+		 * Inclusão a partir da biblioteca cancelada.
+		 */
+		private function onBibliotecaCancel(evt:Event):void
+		{
+			this._audioNova = null;
+			this.addChild(this._telaPrincipal);
+		}
+		
+		/**
+		 * Inclusão a partir da biblioteca confirmada.
+		 */
+		private function onBibliotecaSelect(evt:Event):void
+		{
+			var selecionado:Object = this._telaBiblioteca.selecionado;
+			if ((selecionado != null) && (this._audioNova != null)) {
+				Main.projeto.adicionaAudio(this._audioNova.trilha, true, selecionado.arquivo, this._audioNova.tempo, selecionado.duracao, selecionado.titulo);
+				this.desenhaTrilhas();
+			}
+			this._audioNova = null;
+			this.addChild(this._telaPrincipal);
+		}
+		
+		/**
+		 * Inclusão a partir de meus áudios cancelada.
+		 */
+		private function onMeusAudiosCancel(evt:Event):void
+		{
+			this._audioNova = null;
+			this.addChild(this._telaPrincipal);
+		}
+		
+		/**
+		 * Iniciar a gravação de áudio.
+		 */
+		private function onGravar(evt:Event):void
+		{
+			this._telaGravacao.pastaAudios = Main.projeto.pasta.resolvePath('audios');
+			this.addChild(this._telaGravacao);
+		}
+		
+		/**
+		 * Inclusão a partir de meus áudios confirmada.
+		 */
+		private function onMeusAudiosSelect(evt:Event):void
+		{
+			var selecionado:Object = this._telaMeusAudios.selecionado;
+			if ((selecionado != null) && (this._audioNova != null)) {
+				Main.projeto.adicionaAudio(this._audioNova.trilha, false, selecionado.arquivo, this._audioNova.tempo, selecionado.duracao, selecionado.titulo);
+				this.desenhaTrilhas();
+			}
+			this._audioNova = null;
+			this.addChild(this._telaPrincipal);
+		}
+		
+		/**
+		 * A gravação de áudio foi cancelada.
+		 */
+		private function onGravacaoCancel(evt:Event):void
+		{
+			this.stage.addChild(this._telaMeusAudios);
+		}
+		
+		/**
+		 * A gravação de áudio foi concluída.
+		 */
+		private function onGravacaoComplete(evt:Event):void
+		{
+			this.stage.addChild(this._telaMeusAudios);
+		}
+		
+		/**
+		 * A tela de informações foi fechada.
+		 */
+		private function onInfoComplete(evt:Event):void
+		{
+			this.addChild(this._telaPrincipal);
+		}
+		
+		/**
+		 * O botão "informações" foi clicado.
+		 */
+		private function acInfo():void
+		{
+			this.removeChild(this._telaPrincipal);
+			this.addChild(this._telaInfo);
+		}
+		
+		/**
 		 * O botão "abrir projeto" foi clicado.
 		 */
 		private function acAbrirPrjeto():void
@@ -545,10 +776,11 @@ package colabora.oaprendizagem.audionarrativa.display
 		 */
 		private function acExportarProjeto():void
 		{
-			if (this._telaEscolha.listar('Escolha o projeto para exportar')) {
+			if (this._telaEscolha.listar('Defina o projeto a exportar ou escolha um arquivo para importar')) {
 				this._acAtual = 'exportar projeto';
 				this.removeChild(this._telaPrincipal);
 				this.stage.addChild(this._telaEscolha);
+				this._telaEscolha.mostrarAbrir();
 			}
 		}
 		

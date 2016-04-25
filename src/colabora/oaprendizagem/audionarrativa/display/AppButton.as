@@ -52,7 +52,7 @@ package colabora.oaprendizagem.audionarrativa.display
 		{
 			this._repetindo = false;
 			if (this.repetir) {
-				this._intervalo = setInterval(this.repeticao, 1000);
+				this._intervalo = setInterval(this.repeticao, 300);
 			}
 		}
 		

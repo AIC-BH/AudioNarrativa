@@ -74,6 +74,7 @@ package colabora.oaprendizagem.audionarrativa.dados
 		public function dispose():void
 		{
 			this.nome = null;
+			this.titulo = null;
 		}
 		
 	}
