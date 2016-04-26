@@ -4,7 +4,7 @@
 cd %~dp0 & cd ..
 
 :: ane folder
-set EXTINCLUDE=-extdir ext/
+set EXTINCLUDE=-extdir extdebug/
 
 set PAUSE_ERRORS=1
 call bat\SetupSDK.bat

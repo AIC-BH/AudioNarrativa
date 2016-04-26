@@ -65,7 +65,7 @@ package colabora.oaprendizagem.audionarrativa.dados
 		public function AudioNarrativa() 
 		{
 			// criando id
-			this.id = String(new Date().getTime()) + String(Math.random() * 1000) + String(Math.random() * 1000) + String(Math.random() * 1000)
+			this.id = String(new Date().getTime()) + String(int(Math.round(Math.random() * 1000))) + String(int(Math.round(Math.random() * 1000))) + String(int(Math.round(Math.random() * 1000)));
 			// título e tags
 			this.titulo = '';
 			this.tags = '';
@@ -110,6 +110,22 @@ package colabora.oaprendizagem.audionarrativa.dados
 			if ((to >= 0) && (to < AudioNarrativa.MAXTIME)) {
 				// tempo dentro do limite
 				this._tempo = to;
+			}
+		}
+		
+		/**
+		 * Apaga a pasta de um projeto.
+		 * @param	id	o id do projeto a remover
+		 * @return	TRUE se o projeto for encontrado e removido
+		 */
+		public function apagaProjeto(id:String):Boolean
+		{
+			var pasta:File = File.documentsDirectory.resolvePath(ObjetoAprendizagem.codigo + '/projetos/' + id);
+			if (pasta.isDirectory) {
+				pasta.deleteDirectory(true);
+				return (true);
+			} else {
+				return (false);
 			}
 		}
 		
@@ -287,7 +303,7 @@ package colabora.oaprendizagem.audionarrativa.dados
 		public function clear():void
 		{
 			// recriando id
-			this.id = String(new Date().getTime()) + String(Math.random() * 1000) + String(Math.random() * 1000) + String(Math.random() * 1000);
+			this.id = String(new Date().getTime()) + String(int(Math.round(Math.random() * 1000))) + String(int(Math.round(Math.random() * 1000))) + String(int(Math.round(Math.random() * 1000)));
 			// título e tags
 			this.titulo = '';
 			this.tags = '';

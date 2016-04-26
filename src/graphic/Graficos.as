@@ -111,6 +111,9 @@ package graphic
 		[Embed(source="BTBiblioteca.png")] 
 		public var GRBTBiblioteca:Class;
 		
+		[Embed(source="BTLixeira.png")] 
+		public var GRBTLixeira:Class;
+		
 		[Embed(source="BTMeusAudios.png")] 
 		public var GRBTMeusAudios:Class;
 		
@@ -193,6 +196,7 @@ package graphic
 				case 'BTReceber': bmp = new GRBTReceber() as Bitmap; break;
 				case 'BTOk': bmp = new GRBTOk() as Bitmap; break;
 				case 'BTCancel': bmp = new GRBTCancel() as Bitmap; break;
+				case 'BTLixeira': bmp = new GRBTLixeira() as Bitmap; break;
 				case 'FundoJanela': bmp = new GRFundoJanela() as Bitmap; break;
 				case 'BTBiblioteca': bmp = new GRBTBiblioteca() as Bitmap; break;
 				case 'BTMeusAudios': bmp = new GRBTMeusAudios() as Bitmap; break;
