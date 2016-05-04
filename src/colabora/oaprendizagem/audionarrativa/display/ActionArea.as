@@ -12,7 +12,6 @@ package colabora.oaprendizagem.audionarrativa.display
 		// VARÁVEIS PÚBLICAS
 		
 		public var acAjuda:Function;
-		// public var acMixer:Function;
 		public var acInfo:Function;
 		public var acNovo:Function;
 		public var acAbrir:Function;
@@ -24,7 +23,6 @@ package colabora.oaprendizagem.audionarrativa.display
 		// VARIÁVEIS PRIVADAS
 		
 		private var _btAjuda:Sprite;
-		// private var _btMixer:Sprite;
 		private var _btInfo:Sprite;
 		private var _btNovo:Sprite;
 		private var _btAbrir:Sprite;
@@ -37,7 +35,6 @@ package colabora.oaprendizagem.audionarrativa.display
 		{
 			// preparando imagens dos botões
 			this._btAjuda = Main.graficos.getSPGR('BTAjuda');
-			// this._btMixer = Main.graficos.getSPGR('BTMixer');
 			this._btInfo = Main.graficos.getSPGR('BTInfo');
 			this._btNovo = Main.graficos.getSPGR('BTNovo');
 			this._btAbrir = Main.graficos.getSPGR('BTAbrir');
@@ -49,7 +46,6 @@ package colabora.oaprendizagem.audionarrativa.display
 			// ajustando posições
 			var intervalo:Number = (AreaApp.AREAWIDTH - (8 * this._btAjuda.width)) / 9;
 			this._btAjuda.x = intervalo;
-			// this._btMixer.x = this._btAjuda.x + this._btAjuda.width + intervalo;
 			this._btInfo.x = this._btAjuda.x + this._btAjuda.width + intervalo;
 			this._btNovo.x = this._btInfo.x + this._btInfo.width + intervalo;
 			this._btAbrir.x = this._btNovo.x + this._btNovo.width + intervalo;
@@ -60,7 +56,6 @@ package colabora.oaprendizagem.audionarrativa.display
 			
 			// adicionando botões à imagem
 			this.addChild(this._btAjuda);
-			// this.addChild(this._btMixer);
 			this.addChild(this._btInfo);
 			this.addChild(this._btNovo);
 			this.addChild(this._btAbrir);
@@ -71,7 +66,6 @@ package colabora.oaprendizagem.audionarrativa.display
 			
 			// ouvindo cliques
 			this._btAjuda.addEventListener(MouseEvent.CLICK, onAjuda);
-			// this._btMixer.addEventListener(MouseEvent.CLICK, onMixer);
 			this._btInfo.addEventListener(MouseEvent.CLICK, onInfo);
 			this._btNovo.addEventListener(MouseEvent.CLICK, onNovo);
 			this._btAbrir.addEventListener(MouseEvent.CLICK, onAbrir);
@@ -84,7 +78,6 @@ package colabora.oaprendizagem.audionarrativa.display
 		// FUNÇÕES PRIVADAS
 		
 		private function onAjuda(evt:MouseEvent):void { if (this.acAjuda != null) this.acAjuda(); }
-		// private function onMixer(evt:MouseEvent):void { if (this.acMixer != null) this.acMixer(); }
 		private function onInfo(evt:MouseEvent):void { if (this.acInfo != null) this.acInfo(); }
 		private function onNovo(evt:MouseEvent):void { if (this.acNovo != null) this.acNovo(); }
 		private function onAbrir(evt:MouseEvent):void { if (this.acAbrir != null) this.acAbrir(); }

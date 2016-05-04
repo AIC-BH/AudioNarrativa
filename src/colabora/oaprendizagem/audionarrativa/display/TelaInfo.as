@@ -40,6 +40,7 @@ package colabora.oaprendizagem.audionarrativa.display
 			this._bg.graphics.beginFill(0x333333);
 			this._bg.graphics.drawRect(0, 0, w, h);
 			this._bg.graphics.endFill();
+			this.addChild(this._bg);
 			
 			// fundos
 			this._bgid = Main.graficos.getGR('AreaTextoId');
@@ -165,7 +166,7 @@ package colabora.oaprendizagem.audionarrativa.display
 		{
 			// recuperando textos alterados
 			if (this._nome.text != '') Main.projeto.titulo = this._nome.text;
-			if (this._sobre.text != '') Main.projeto.tags = this._sobre.text;
+			Main.projeto.tags = this._sobre.text;
 			if (this._id.text != '') {
 				if (this._id.text != Main.projeto.titulo) {
 					var regExp:RegExp =/[:|\/|.|&|$|#|*|+|=|<|>|\\|@|%]/g;

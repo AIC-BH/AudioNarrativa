@@ -26,7 +26,7 @@ set SCREEN_SIZE=NexusOne
 
 :desktop-run
 echo.
-echo Starting AIR Debug Launcher with screen size '%SCREEN_SIZE%' %EXTINCLUDE%
+echo Starting AIR Debug Launcher with screen size '%SCREEN_SIZE%'
 echo.
 echo (hint: edit 'Run.bat' to test on device or change screen size)
 echo.

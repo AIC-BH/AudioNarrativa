@@ -209,7 +209,9 @@ package colabora.oaprendizagem.audionarrativa.display
 			this._navegaProjeto.addEventListener(IOErrorEvent.IO_ERROR, onNavegadorPFim);
 			
 			// tela de mensagens
-			this._telaMensagem = new TelaMensagem(Main.graficos.getSPGR('BTOk'),
+			this._telaMensagem = new TelaMensagem(AreaApp.AREAWIDTH,
+													AreaApp.AREAHEIGHT,
+													Main.graficos.getSPGR('BTOk'),
 													Main.graficos.getSPGR('BTCancel'),
 													0x666666, 
 													0xFFFFFF);
@@ -462,7 +464,7 @@ package colabora.oaprendizagem.audionarrativa.display
 						// avisar sobre problema ao abrir projeto
 						this.stage.removeChild(this._telaEscolha);
 						this._telaMensagem.defineMensagem('<b>Erro!</b><br />&nbsp;<br />Não foi possível abrir o projeto escolhido. Por favor tente novamente.');
-						this.stage.addChild(this._telaMensagem);
+						this.addChild(this._telaMensagem);
 					} else {
 						// mostrar projeto aberto
 						this.stage.removeChild(this._telaEscolha);
@@ -484,12 +486,12 @@ package colabora.oaprendizagem.audionarrativa.display
 						// avisar sobre problema ao exportar projeto
 						this.stage.removeChild(this._telaEscolha);
 						this._telaMensagem.defineMensagem('<b>Erro!</b><br />&nbsp;<br />Não foi possível exportar o projeto escolhido. Por favor tente novamente.');
-						this.stage.addChild(this._telaMensagem);
+						this.addChild(this._telaMensagem);
 					} else {
 						// avisar sobre o projeto exportado
 						this.stage.removeChild(this._telaEscolha);
 						this._telaMensagem.defineMensagem('<b>Exportação concluída</b><br />&nbsp;<br />O projeto selecionado foi exportado e está gravado com o nome <br />&nbsp;<br /><b>' + exportado + '</b><br />&nbsp;<br />na pasta <br />&nbsp;<br /><b>' + File.documentsDirectory.resolvePath(ObjetoAprendizagem.codigo + '/exportados').nativePath + '</b><br />&nbsp;<br />de seu aparelho.');
-						this.stage.addChild(this._telaMensagem);
+						this.addChild(this._telaMensagem);
 					}
 					break;
 				default:
@@ -512,7 +514,7 @@ package colabora.oaprendizagem.audionarrativa.display
 					this._telaMensagem.defineMensagem('<b>Apagar projeto</b><br />&nbsp;<br />Você tem certeza de que quer apagar o projeto <b>' + this._telaEscolha.escolhido.titulo + '</b> permanentemente? Esta ação não pode ser desfeita.', true);
 					this._acAtual = 'apaga projeto';
 					this.stage.removeChild(this._telaEscolha);
-					this.stage.addChild(this._telaMensagem);
+					this.addChild(this._telaMensagem);
 				}
 			}
 		}
@@ -570,12 +572,12 @@ package colabora.oaprendizagem.audionarrativa.display
 					Main.projeto.clear();
 					Main.projeto.tempoAtual = 0;
 					this.desenhaTrilhas();
-					this.stage.removeChild(this._telaMensagem);
+					this.removeChild(this._telaMensagem);
 					this.addChild(this._telaPrincipal);
 					break;
 				case 'salvar projeto':
 					this.salvar();
-					this.stage.removeChild(this._telaMensagem);
+					this.removeChild(this._telaMensagem);
 					this.addChild(this._telaPrincipal);
 					break;
 				case 'compartilhar projeto':
@@ -591,7 +593,7 @@ package colabora.oaprendizagem.audionarrativa.display
 					} else {
 						// iniciar compartilhamento
 						if (ObjetoAprendizagem.compartilhamento.iniciaURL(File.documentsDirectory.resolvePath(ObjetoAprendizagem.codigo + '/exportados/' + exportado))) {
-							this.stage.removeChild(this._telaMensagem);
+							this.removeChild(this._telaMensagem);
 							this.stage.addChild(ObjetoAprendizagem.compartilhamento);
 						} else {
 							// avisar sobre erro de compartilhamento
@@ -612,11 +614,11 @@ package colabora.oaprendizagem.audionarrativa.display
 							Main.projeto.apagaProjeto(String(this._telaEscolha.escolhido.id));
 						}
 					}
-					this.stage.removeChild(this._telaMensagem);
+					this.removeChild(this._telaMensagem);
 					this.addChild(this._telaPrincipal);
 					break;
 				default:
-					this.stage.removeChild(this._telaMensagem);
+					this.removeChild(this._telaMensagem);
 					this.addChild(this._telaPrincipal);
 					break;
 			}
@@ -628,7 +630,7 @@ package colabora.oaprendizagem.audionarrativa.display
 		 */
 		private function onMensagemCancel(evt:Event):void
 		{
-			this.stage.removeChild(this._telaMensagem);
+			this.removeChild(this._telaMensagem);
 			this.addChild(this._telaPrincipal);
 		}
 		
@@ -649,7 +651,7 @@ package colabora.oaprendizagem.audionarrativa.display
 			if (!Main.projeto.importar(ObjetoAprendizagem.compartilhamento.download)) {
 				this._telaMensagem.defineMensagem('<b>Erro de importação!</b><br />&nbsp;<br />Não foi possível importar o projeto recebido. Por favor tente novamente.');
 				this.stage.removeChild(ObjetoAprendizagem.compartilhamento);
-				this.stage.addChild(this._telaMensagem);
+				this.addChild(this._telaMensagem);
 			}
 		}
 		
@@ -662,7 +664,7 @@ package colabora.oaprendizagem.audionarrativa.display
 			this._telaMensagem.defineMensagem('<b>Projeto importado!</b><br />&nbsp;<br />O projeto recebido foi importado corretamente. Use o botão "abrir projeto" para conferi-lo.');
 			try { this.stage.removeChild(ObjetoAprendizagem.compartilhamento); } catch (e:Error) { }
 			try { this.removeChild(this._telaPrincipal); } catch (e:Error) { }
-			this.stage.addChild(this._telaMensagem);
+			this.addChild(this._telaMensagem);
 		}
 		
 		/**
@@ -674,7 +676,7 @@ package colabora.oaprendizagem.audionarrativa.display
 			this._telaMensagem.defineMensagem('<b>Erro de importação!</b><br />&nbsp;<br />Não foi possível importar o projeto recebido. Por favor tente novamente.');
 			try { this.stage.removeChild(ObjetoAprendizagem.compartilhamento); } catch (e:Error) { }
 			try { this.removeChild(this._telaPrincipal); } catch (e:Error) { }
-			this.stage.addChild(this._telaMensagem);
+			this.addChild(this._telaMensagem);
 		}
 		
 		/**
@@ -845,7 +847,7 @@ package colabora.oaprendizagem.audionarrativa.display
 		{
 			this._acAtual = 'novo projeto';
 			this._telaMensagem.defineMensagem('<b>Atenção!</b><br />&nbsp;<br />Você quer realmente criar um projeto novo? Alterações não gravadas no projeto atual serão perdidas!', true);
-			this.stage.addChild(this._telaMensagem);
+			this.addChild(this._telaMensagem);
 			this.removeChild(this._telaPrincipal);
 		}
 		
@@ -857,12 +859,12 @@ package colabora.oaprendizagem.audionarrativa.display
 			if (Main.projeto.titulo == '') {
 				this._acAtual = 'aviso falta titulo';
 				this._telaMensagem.defineMensagem('<b>Atenção!</b><br />&nbsp;<br />Seu projeto ainda não tem um título e não pode ser gravado. Toque no botão de informações para incluir um título e tente novamente.');
-				this.stage.addChild(this._telaMensagem);
+				this.addChild(this._telaMensagem);
 				this.removeChild(this._telaPrincipal);
 			} else {
 				this._acAtual = 'salvar projeto';
 				this._telaMensagem.defineMensagem('<b>Atenção!</b><br />&nbsp;<br />Você tem certeza de que quer salvar o projeto atual com o título <b>' + Main.projeto.titulo + '</b>?', true);
-				this.stage.addChild(this._telaMensagem);
+				this.addChild(this._telaMensagem);
 				this.removeChild(this._telaPrincipal);
 			}
 		}
@@ -875,12 +877,12 @@ package colabora.oaprendizagem.audionarrativa.display
 			if (Main.projeto.titulo == '') {
 				this._acAtual = 'aviso falta titulo';
 				this._telaMensagem.defineMensagem('<b>Atenção!</b><br />&nbsp;<br />Seu projeto ainda não tem um título e não pode ser compartilhado. Toque no botão de informações para incluir um título e tente novamente.');
-				this.stage.addChild(this._telaMensagem);
+				this.addChild(this._telaMensagem);
 				this.removeChild(this._telaPrincipal);
 			} else {
 				this._acAtual = 'compartilhar projeto';
 				this._telaMensagem.defineMensagem('<b>Atenção!</b><br />&nbsp;<br />Você tem certeza de que quer compartilhar o projeto atual com o título <b>' + Main.projeto.titulo + '</b>?', true);
-				this.stage.addChild(this._telaMensagem);
+				this.addChild(this._telaMensagem);
 				this.removeChild(this._telaPrincipal);
 			}
 		}
