@@ -3,7 +3,7 @@
 <application xmlns="http://ns.adobe.com/air/application/20.0">
   <id>air.AudioNarrativa</id>
   <versionNumber>0.1</versionNumber>
-  <supportedProfiles>mobileDevice</supportedProfiles>
+  <supportedProfiles>extendedDesktop desktop</supportedProfiles>
   <filename>AudioNarrativa</filename>
   <name>AudioNarrativa</name>
   <android>

@@ -192,6 +192,7 @@ package colabora.oaprendizagem.audionarrativa.display
 													Main.graficos.getSPGR('BTOk'),
 													Main.graficos.getSPGR('BTCancel'),
 													Main.graficos.getSPGR('BTAbrir'),
+													Main.graficos.getSPGR('BTLixeira'),
 													File.documentsDirectory.resolvePath(ObjetoAprendizagem.codigo + '/projetos/' ));
 			this._telaEscolha.addEventListener(Event.COMPLETE, onEscolhaOK);
 			this._telaEscolha.addEventListener(Event.CANCEL, onEscolhaCancel);
@@ -204,7 +205,9 @@ package colabora.oaprendizagem.audionarrativa.display
 			this._navegaProjeto.addEventListener(IOErrorEvent.IO_ERROR, onNavegadorPFim);
 			
 			// tela de mensagens
-			this._telaMensagem = new TelaMensagem(Main.graficos.getSPGR('BTOk'),
+			this._telaMensagem = new TelaMensagem(AreaApp.AREAWIDTH,
+													AreaApp.AREAHEIGHT,
+													Main.graficos.getSPGR('BTOk'),
 													Main.graficos.getSPGR('BTCancel'),
 													0x666666, 
 													0xFFFFFF);
