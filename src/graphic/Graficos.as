@@ -150,6 +150,9 @@ package graphic
 		[Embed(source="SobreID.png")] 
 		public var GRSobreID:Class;
 		
+		[Embed(source="BTLixeira.png")] 
+		public var GRBTLixeira:Class;
+		
 		public function Graficos() 
 		{
 			
@@ -211,6 +214,7 @@ package graphic
 				case 'MensagemGravandoAudio': bmp = new GRMensagemGravandoAudio() as Bitmap; break;
 				case 'MensagemProcessandoAudio': bmp = new GRMensagemProcessandoAudio() as Bitmap; break;
 				case 'SobreID': bmp = new GRSobreID() as Bitmap; break;
+				case 'BTLixeira': bmp = new GRBTLixeira() as Bitmap; break;
 			}
 			if (bmp != null) bmp.smoothing = true;
 			return (bmp);

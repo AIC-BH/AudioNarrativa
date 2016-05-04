@@ -18,6 +18,7 @@
   <classpaths>
     <class path="src" />
     <class path="..\..\OAprendizagem\LibColabora\src" />
+    <class path="..\OAprendizagemLibs" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -60,6 +61,9 @@
     <element path="..\..\OAprendizagem\LibColabora\src\compilados\ZXing.swc" />
     <element path="ext\ZXing.ane" />
     <element path="..\..\OAprendizagem\LibColabora\src\compilados\shineMP3_alchemy.swc" />
+    <element path="..\OAprendizagemLibs\compilados\fzip.swc" />
+    <element path="..\OAprendizagemLibs\compilados\shineMP3_alchemy.swc" />
+    <element path="..\OAprendizagemLibs\compilados\ZXing.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

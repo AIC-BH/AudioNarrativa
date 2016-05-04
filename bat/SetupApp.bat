@@ -28,6 +28,7 @@ set IOS_DIST_SIGNING_OPTIONS=-storetype pkcs12 -keystore "%IOS_DIST_CERT_FILE%" 
 
 :: Application descriptor
 set APP_XML=application.xml
+set DESK_XML=application-desktop.xml
 
 :: Files to package
 set APP_DIR=bin
