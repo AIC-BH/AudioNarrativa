@@ -1,5 +1,6 @@
 package colabora.oaprendizagem.audionarrativa.display 
 {
+	import art.ciclope.data.PersistentData;
 	import colabora.display.EscolhaProjeto;
 	import colabora.display.TelaMensagem;
 	import colabora.oaprendizagem.dados.ObjetoAprendizagem;
@@ -50,6 +51,8 @@ package colabora.oaprendizagem.audionarrativa.display
 		private var _elementos:Vector.<AreaCheia>;		// elementos de áudio das trilhas
 		private var _audioAtual:AreaCheia;				// referência ao último elemento de áudio clicado
 		private var _audioNova:AreaVazia;				// referência à última área de inclusão de áudio clicada
+		
+		private var _save:PersistentData;
 		
 		private var _btplay:AppButton;
 		private var _btpause:AppButton;
@@ -197,6 +200,7 @@ package colabora.oaprendizagem.audionarrativa.display
 			this._telaEscolha.addEventListener(Event.COMPLETE, onEscolhaOK);
 			this._telaEscolha.addEventListener(Event.CANCEL, onEscolhaCancel);
 			this._telaEscolha.addEventListener(Event.OPEN, onEscolhaOpen);
+			this._telaEscolha.addEventListener(Event.CLEAR, onEscolhaClear);
 			
 			// navegação para importar projeto
 			this._navegaProjeto = File.documentsDirectory;
@@ -249,6 +253,12 @@ package colabora.oaprendizagem.audionarrativa.display
 			// informações sobre o projeto
 			this._telaInfo = new TelaInfo(AreaApp.AREAWIDTH, AreaApp.AREAHEIGHT);
 			this._telaInfo.addEventListener(Event.COMPLETE, onInfoComplete);
+			
+			// dados persistentes
+			this._save = new PersistentData(ObjetoAprendizagem.codigo);
+			if (this._save.isSet('ultimo')) {
+				if (Main.projeto.carregaProjeto(this._save.getValue('ultimo'))) this.desenhaTrilhas();
+			}
 		}
 		
 		/**
@@ -313,6 +323,15 @@ package colabora.oaprendizagem.audionarrativa.display
 				this._elementos.push(area);
 				area.addEventListener(MouseEvent.CLICK, cliqueAudio);
 			}
+		}
+		
+		/**
+		 * Salva projeto atual e guarda referência para abrir novamente no futuro.
+		 */
+		public function salvar():void
+		{
+			Main.projeto.salvar();
+			this._save.setValue('ultimo', Main.projeto.id);
 		}
 		
 		// FUNÇÕES PRIVADAS
@@ -433,7 +452,7 @@ package colabora.oaprendizagem.audionarrativa.display
 					if (this._telaEscolha.escolhido != null) {
 						if (this._telaEscolha.escolhido.id != null) {
 							// salvar projeto atual
-							Main.projeto.salvar();
+							this.salvar();
 							// carregar o projeto selecionado
 							if (Main.projeto.carregaProjeto(this._telaEscolha.escolhido.id)) Main.projeto.tempoAtual = 0;
 							this.desenhaTrilhas();
@@ -481,6 +500,23 @@ package colabora.oaprendizagem.audionarrativa.display
 					break;
 			}
 			
+		}
+		
+		/**
+		 * Um projeto foi escolhido para apagar tela de listagem.
+		 */
+		private function onEscolhaClear(evt:Event):void
+		{
+			// existe informação sobre o projeto a remover?
+			if (this._telaEscolha.escolhido != null) {
+				if (this._telaEscolha.escolhido.id != null) {
+					if (this._telaEscolha.escolhido.titulo == '') this._telaEscolha.escolhido.titulo = 'sem nome';
+					this._telaMensagem.defineMensagem('<b>Apagar projeto</b><br />&nbsp;<br />Você tem certeza de que quer apagar o projeto <b>' + this._telaEscolha.escolhido.titulo + '</b> permanentemente? Esta ação não pode ser desfeita.', true);
+					this._acAtual = 'apaga projeto';
+					this.stage.removeChild(this._telaEscolha);
+					this.stage.addChild(this._telaMensagem);
+				}
+			}
 		}
 		
 		/**
@@ -540,7 +576,7 @@ package colabora.oaprendizagem.audionarrativa.display
 					this.addChild(this._telaPrincipal);
 					break;
 				case 'salvar projeto':
-					Main.projeto.salvar();
+					this.salvar();
 					this.stage.removeChild(this._telaMensagem);
 					this.addChild(this._telaPrincipal);
 					break;
@@ -565,6 +601,21 @@ package colabora.oaprendizagem.audionarrativa.display
 							this._telaMensagem.defineMensagem('<b>Erro!</b><br />&nbsp;<br />Não foi possível exportar o projeto escolhido para compartilhamento. Por favor tente novamente.');
 						}
 					}
+					break;
+				case 'apaga projeto':
+					if (this._telaEscolha.escolhido != null) {
+						if (this._telaEscolha.escolhido.id != null) {
+							if (String(this._telaEscolha.escolhido.id) == Main.projeto.id) {
+								// o projeto a apagar é o atual
+								Main.projeto.clear();
+								this.desenhaTrilhas();
+							}
+							// removendo pasta do projeto
+							Main.projeto.apagaProjeto(String(this._telaEscolha.escolhido.id));
+						}
+					}
+					this.stage.removeChild(this._telaMensagem);
+					this.addChild(this._telaPrincipal);
 					break;
 				default:
 					this.stage.removeChild(this._telaMensagem);
@@ -669,6 +720,7 @@ package colabora.oaprendizagem.audionarrativa.display
 		 */
 		private function onIncluiMeusAudios(evt:Event):void
 		{
+			this.salvar();
 			this.removeChild(this._telaPrincipal);
 			this._telaMeusAudios.pasta = Main.projeto.pasta.resolvePath('audios');
 			this.stage.addChild(this._telaMeusAudios);
@@ -767,10 +819,11 @@ package colabora.oaprendizagem.audionarrativa.display
 		 */
 		private function acAbrirPrjeto():void
 		{
-			if (this._telaEscolha.listar('Escolha o projeto a abrir')) {
+			if (this._telaEscolha.listar('Escolha um projeto para abrir ou apagar')) {
 				this._acAtual = 'abrir projeto';
 				this.removeChild(this._telaPrincipal);
 				this.stage.addChild(this._telaEscolha);
+				this._telaEscolha.mostrarLixeira();
 			}
 		}
 		

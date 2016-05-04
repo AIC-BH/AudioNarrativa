@@ -47,7 +47,8 @@ package colabora.oaprendizagem.audionarrativa.display
 				this._bgs.push(Main.graficos.getGR('AreaCheiaInicio'));
 				for (var ponto:int = 1; ponto < (dr - 1); ponto++) {
 					this._bgs.push(Main.graficos.getGR('AreaCheiaMeio'));
-					this._bgs[ponto].x = ponto * AreaApp.BOXSIDE;
+					this._bgs[ponto].width = AreaApp.BOXSIDE + 10;
+					this._bgs[ponto].x = (ponto * AreaApp.BOXSIDE) - 5;
 				}
 				this._bgs.push(Main.graficos.getGR('AreaCheiaFim'));
 				this._bgs[dr - 1].x = (dr - 1) * AreaApp.BOXSIDE;
