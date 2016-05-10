@@ -69,10 +69,7 @@ echo using certificate: %CERT_FILE%...
 echo.
 echo adt -package -target %TYPE%%TARGET% %OPTIONS% %SIGNING_OPTIONS% "%OUTPUT%" "%APP_XML%" %FILE_OR_DIR% %EXTINCLUDE%
 echo.
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/master
 call adt -package -target %TYPE%%TARGET% %OPTIONS% %SIGNING_OPTIONS% "%OUTPUT%" "%APP_XML%" %FILE_OR_DIR% %EXTINCLUDE%
 echo.
 if errorlevel 1 goto failed
