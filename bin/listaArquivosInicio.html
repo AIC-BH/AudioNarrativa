@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<meta name="viewport" content="user-scalable=no" />
+	<script>
+		function onSelect(id, arquivo) {
+			window.location = 'http://api/' + encodeURI(JSON.stringify({'ac':'select', 'id':id, 'arquivo':arquivo}));
+			var divs = document.getElementsByName('arqdiv');
+			for (var i=0; i<divs.length; i++) {
+				divs[i].className = 'unselect';
+			}
+			var chosen = document.getElementById(id);
+			chosen.className = 'select';
+		}
+	</script>
+	<style>
+		html, body {
+			font-family: Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, sans-serif;
+			color: #000000;
+			background-color: #FFFFFF;
+			font-size: 14px;
+			margin: 5px 5px 5px 5px;
+		}
+		h1 {
+			color: #e04d4c;
+			font-weight: bold;
+			font-size: 18px;
+			margin: 0 0 0 0;
+		}
+		h2 {
+			color: #f08435;
+			font-style: italic;
+			font-size: 16px;
+			margin: 5px 0 10px 0;
+		}
+		.unselect {
+			cursor: pointer;
+			color: #000000;
+			background-color: #FFFFFF;
+			padding: 5px 2px 5px 2px;
+		}
+		.select {
+			cursor: pointer;
+			color: #FFFFFF;
+			background-color: #e04d4c;
+			padding: 5px 2px 5px 2px;
+		}
+		.listaitem {
+			width: 100px;
+			display: inline-block;
+			text-align: center;
+			overflow: hidden;
+		}
+		.imglistada {
+			border: none;
+			width: 90px;
+		}
+	</style>
+</head>
+<body>

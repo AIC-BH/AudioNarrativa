@@ -1,6 +1,7 @@
 package
 {
 	import colabora.display.Compartilhamento;
+	import colabora.display.TelaSplash;
 	import colabora.oaprendizagem.audionarrativa.dados.AudioNarrativa;
 	import colabora.oaprendizagem.audionarrativa.display.AreaApp;
 	import colabora.oaprendizagem.servidor.Servidor;
@@ -15,6 +16,7 @@ package
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
 	import graphic.Graficos;
+	import flash.utils.setTimeout;
 	
 	import colabora.oaprendizagem.dados.ObjetoAprendizagem;
 	
@@ -36,12 +38,26 @@ package
 		public static var graficos:Graficos;
 		
 		/**
+		 * App funcionando em um computador?
+		 */
+		public static var desktop:Boolean = false;
+		
+		/**
 		 * Tela do app.
 		 */
 		public var appView:AreaApp;
 		
+		/**
+		 * Tela inicial.
+		 */
+		private var _splash:TelaSplash;
+		
 		public function Main() 
 		{
+			setTimeout(iniciar, 250);
+		}
+		
+		private function iniciar():void {
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			stage.addEventListener(Event.DEACTIVATE, deactivate);
@@ -75,8 +91,10 @@ package
 			this.addChild(this.appView);
 			this.appView.posiciona();
 			
-			//Main.projeto.carregaProjeto('primeiroprojeto');
-			//this.appView.desenhaTrilhas();
+			// aplicando tela inicial
+			this._splash = new TelaSplash(6);
+			this._splash.addEventListener(Event.COMPLETE, onSplash);
+			this.stage.addChild(this._splash);
 			
 			// atualizando display do app sempre que houver mudança na tela
 			this.stage.addEventListener(Event.RESIZE, stageResize);
@@ -95,6 +113,15 @@ package
 		private function somAtualizado(evt:Event):void
 		{
 			this.appView.showPos(Main.projeto.tempoAtual);
+		}
+		
+		/**
+		 * O tempo da tela inicial terminou.
+		 */
+		private function onSplash(evt:Event):void
+		{
+			this._splash.removeEventListener(Event.COMPLETE, onSplash);
+			this._splash = null;
 		}
 		
 		/**

@@ -24,7 +24,7 @@ package colabora.oaprendizagem.audionarrativa.display
 				var txt:TextField = new TextField();
 				txt.width = AreaApp.BOXSIDE;
 				txt.height = AreaApp.BOXSIDE / 2;
-				txt.defaultTextFormat = new TextFormat('_sans', 35, 0xFFFFFF, true, null, null, null, null, 'center');
+				txt.defaultTextFormat = new TextFormat('_sans', 35, 0xf08435, true, null, null, null, null, 'center');
 				txt.x = AreaApp.BOXSIDE * i;
 				txt.y = AreaApp.BOXSIDE / 20;
 				txt.selectable = false;

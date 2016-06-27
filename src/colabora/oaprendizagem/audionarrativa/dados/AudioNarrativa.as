@@ -400,9 +400,9 @@ package colabora.oaprendizagem.audionarrativa.dados
 						var nomeArquivo:String;
 						if (json.titulo == '') {
 							var data:Date = new Date();
-							nomeArquivo = data.date + '-' + (data.month + 1) + '-' + data.fullYear + '.narraudio';
+							nomeArquivo = data.date + '-' + (data.month + 1) + '-' + data.fullYear + '.adn';
 						} else {
-							nomeArquivo = json.titulo + '.narraudio';
+							nomeArquivo = json.titulo + '.adn';
 						}
 						if (!File.documentsDirectory.resolvePath(ObjetoAprendizagem.codigo + '/exportados').isDirectory) File.documentsDirectory.resolvePath(ObjetoAprendizagem.codigo + '/exportados').createDirectory();
 						stream.open(File.documentsDirectory.resolvePath(ObjetoAprendizagem.codigo + '/exportados/' + nomeArquivo), FileMode.WRITE);

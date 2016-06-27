@@ -70,14 +70,14 @@ package colabora.oaprendizagem.audionarrativa.display
 			
 			// aplicando texto
 			this._tx = new TextField();
-			this._tx.width = this.width - 12;
-			this._tx.height = 60;
-			this._tx.x = 12;
-			this._tx.y = 18;
+			this._tx.width = this.width - 35;
+			this._tx.height = 50;
+			this._tx.x = 20;
+			this._tx.y = 28;
 			this._tx.selectable = false;
 			this._tx.multiline = false;
 			this._tx.wordWrap = false;
-			this._tx.defaultTextFormat = new TextFormat('_sans', 40, 0xFFFFFF);
+			this._tx.defaultTextFormat = new TextFormat('_sans', 40, 0x000000);
 			this._tx.text = tt;
 			this.addChild(this._tx);
 			

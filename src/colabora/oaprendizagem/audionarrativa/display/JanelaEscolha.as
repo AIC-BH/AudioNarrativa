@@ -48,7 +48,7 @@ package colabora.oaprendizagem.audionarrativa.display
 			
 			// texto
 			this._texto = new TextField();
-			this._texto.defaultTextFormat = new TextFormat('_sans', 25, 0xFFFFFF);
+			this._texto.defaultTextFormat = new TextFormat('_sans', 25, 0xe04d4c);
 			this._texto.multiline = true;
 			this._texto.wordWrap = true;
 			this._texto.selectable = false;

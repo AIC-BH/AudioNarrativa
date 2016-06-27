@@ -37,7 +37,7 @@ package colabora.oaprendizagem.audionarrativa.display
 		{
 			// fundo
 			this._bg = new Shape();
-			this._bg.graphics.beginFill(0x333333);
+			this._bg.graphics.beginFill(0xFFFFFF);
 			this._bg.graphics.drawRect(0, 0, w, h);
 			this._bg.graphics.endFill();
 			this.addChild(this._bg);
