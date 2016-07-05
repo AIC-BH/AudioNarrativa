@@ -150,6 +150,58 @@ package graphic
 		[Embed(source="SobreID.png")] 
 		public var GRSobreID:Class;
 		
+		[Embed(source="BTEsquerda.png")] 
+		public var GRBTEsquerda:Class;
+		
+		[Embed(source="BTDireita.png")] 
+		public var GRBTDireita:Class;
+		
+		[Embed(source="BTFechar.png")] 
+		public var GRBTFechar:Class;
+		
+		// HELP
+		
+		[Embed(source="help/01.png", compression="true", quality="70")] 
+		public var AJUDA01:Class;
+		[Embed(source="help/02.png", compression="true", quality="70")] 
+		public var AJUDA02:Class;
+		[Embed(source="help/03.png", compression="true", quality="70")] 
+		public var AJUDA03:Class;
+		[Embed(source="help/04.png", compression="true", quality="70")] 
+		public var AJUDA04:Class;
+		[Embed(source="help/05.png", compression="true", quality="70")] 
+		public var AJUDA05:Class;
+		[Embed(source="help/06.png", compression="true", quality="70")] 
+		public var AJUDA06:Class;
+		[Embed(source="help/07.png", compression="true", quality="70")] 
+		public var AJUDA07:Class;
+		[Embed(source="help/08.png", compression="true", quality="70")] 
+		public var AJUDA08:Class;
+		[Embed(source="help/09.png", compression="true", quality="70")] 
+		public var AJUDA09:Class;
+		[Embed(source="help/10.png", compression="true", quality="70")] 
+		public var AJUDA10:Class;
+		[Embed(source="help/11.png", compression="true", quality="70")] 
+		public var AJUDA11:Class;
+		[Embed(source="help/12.png", compression="true", quality="70")] 
+		public var AJUDA12:Class;
+		[Embed(source="help/13.png", compression="true", quality="70")] 
+		public var AJUDA13:Class;
+		[Embed(source="help/14.png", compression="true", quality="70")] 
+		public var AJUDA14:Class;
+		[Embed(source="help/15.png", compression="true", quality="70")] 
+		public var AJUDA15:Class;
+		[Embed(source="help/16.png", compression="true", quality="70")] 
+		public var AJUDA16:Class;
+		
+		
+		[Embed(source="BTHelp1.png")] 
+		public var GRBTHelp1:Class;
+		[Embed(source="BTHelp2.png")] 
+		public var GRBTHelp2:Class;
+		[Embed(source="BTHelp3.png")] 
+		public var GRBTHelp3:Class;
+		
 		public function Graficos() 
 		{
 			
@@ -211,6 +263,31 @@ package graphic
 				case 'MensagemGravandoAudio': bmp = new GRMensagemGravandoAudio() as Bitmap; break;
 				case 'MensagemProcessandoAudio': bmp = new GRMensagemProcessandoAudio() as Bitmap; break;
 				case 'SobreID': bmp = new GRSobreID() as Bitmap; break;
+				
+				case 'BTEsquerda': bmp = new GRBTEsquerda() as Bitmap; break;
+				case 'BTDireita': bmp = new GRBTDireita() as Bitmap; break;
+				case 'BTFechar': bmp = new GRBTFechar() as Bitmap; break;
+				
+				case 'AJUDA01': bmp = new AJUDA01() as Bitmap; break;
+				case 'AJUDA02': bmp = new AJUDA02() as Bitmap; break;
+				case 'AJUDA03': bmp = new AJUDA03() as Bitmap; break;
+				case 'AJUDA04': bmp = new AJUDA04() as Bitmap; break;
+				case 'AJUDA05': bmp = new AJUDA05() as Bitmap; break;
+				case 'AJUDA06': bmp = new AJUDA06() as Bitmap; break;
+				case 'AJUDA07': bmp = new AJUDA07() as Bitmap; break;
+				case 'AJUDA08': bmp = new AJUDA08() as Bitmap; break;
+				case 'AJUDA09': bmp = new AJUDA09() as Bitmap; break;
+				case 'AJUDA10': bmp = new AJUDA10() as Bitmap; break;
+				case 'AJUDA11': bmp = new AJUDA11() as Bitmap; break;
+				case 'AJUDA12': bmp = new AJUDA12() as Bitmap; break;
+				case 'AJUDA13': bmp = new AJUDA13() as Bitmap; break;
+				case 'AJUDA14': bmp = new AJUDA14() as Bitmap; break;
+				case 'AJUDA15': bmp = new AJUDA15() as Bitmap; break;
+				case 'AJUDA16': bmp = new AJUDA16() as Bitmap; break;
+				
+				case 'BTHelp1': bmp = new GRBTHelp1() as Bitmap; break;
+				case 'BTHelp2': bmp = new GRBTHelp2() as Bitmap; break;
+				case 'BTHelp3': bmp = new GRBTHelp3() as Bitmap; break;
 			}
 			if (bmp != null) bmp.smoothing = true;
 			return (bmp);

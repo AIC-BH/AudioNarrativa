@@ -3,8 +3,10 @@ package colabora.oaprendizagem.audionarrativa.display
 	import art.ciclope.data.PersistentData;
 	import art.ciclope.io.FileBrowser;
 	import colabora.display.EscolhaProjeto;
+	import colabora.display.TelaAjuda;
 	import colabora.display.TelaMensagem;
 	import colabora.oaprendizagem.dados.ObjetoAprendizagem;
+	import flash.display.Bitmap;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import colabora.oaprendizagem.audionarrativa.dados.AudioNarrativa;
@@ -65,6 +67,7 @@ package colabora.oaprendizagem.audionarrativa.display
 		
 		private var _telaPrincipal:Sprite;
 		private var _telaEscolha:EscolhaProjeto;
+		private var _telaAjuda:TelaAjuda;
 		private var _telaMensagem:TelaMensagem;
 		private var _incluiAudio:JanelaIncluiAudio;
 		private var _removeAudio:JanelaRemoveAudio;
@@ -176,6 +179,7 @@ package colabora.oaprendizagem.audionarrativa.display
 			this._acoes.y = this._telaPrincipal.height + ((AreaApp.AREAHEIGHT - this._telaPrincipal.height - this._acoes.height) / 2);
 			this._telaPrincipal.addChild(this._acoes);
 			this._acoes.acAbrir = this.acAbrirPrjeto;
+			this._acoes.acAjuda = this.acAjuda;
 			this._acoes.acArquivos = this.acExportarProjeto;
 			this._acoes.acNovo = this.acNovo;
 			this._acoes.acSalvar = this.acSalvar;
@@ -208,6 +212,30 @@ package colabora.oaprendizagem.audionarrativa.display
 			this._telaEscolha.addEventListener(Event.CANCEL, onEscolhaCancel);
 			this._telaEscolha.addEventListener(Event.OPEN, onEscolhaOpen);
 			this._telaEscolha.addEventListener(Event.CLEAR, onEscolhaClear);
+			
+			// tela de ajuda
+			var ajuda:Vector.<Bitmap> = new Vector.<Bitmap>();
+			ajuda.push(Main.graficos.getGR('AJUDA01'));
+			ajuda.push(Main.graficos.getGR('AJUDA02'));
+			ajuda.push(Main.graficos.getGR('AJUDA03'));
+			ajuda.push(Main.graficos.getGR('AJUDA04'));
+			ajuda.push(Main.graficos.getGR('AJUDA05'));
+			ajuda.push(Main.graficos.getGR('AJUDA06'));
+			ajuda.push(Main.graficos.getGR('AJUDA07'));
+			ajuda.push(Main.graficos.getGR('AJUDA08'));
+			ajuda.push(Main.graficos.getGR('AJUDA09'));
+			ajuda.push(Main.graficos.getGR('AJUDA10'));
+			ajuda.push(Main.graficos.getGR('AJUDA11'));
+			ajuda.push(Main.graficos.getGR('AJUDA12'));
+			ajuda.push(Main.graficos.getGR('AJUDA13'));
+			ajuda.push(Main.graficos.getGR('AJUDA14'));
+			ajuda.push(Main.graficos.getGR('AJUDA15'));
+			ajuda.push(Main.graficos.getGR('AJUDA16'));
+			
+			this._telaAjuda = new TelaAjuda(ajuda, Main.graficos.getSPGR('BTDireita'), Main.graficos.getSPGR('BTEsquerda'), Main.graficos.getSPGR('BTFechar'));
+			this._telaAjuda.adicionaBotao(Main.graficos.getSPGR('BTHelp1'), 0);
+			this._telaAjuda.adicionaBotao(Main.graficos.getSPGR('BTHelp2'), 10);
+			this._telaAjuda.adicionaBotao(Main.graficos.getSPGR('BTHelp3'), 14);
 			
 			// navegação para importar projeto
 			this._navegaProjeto = File.documentsDirectory;
@@ -871,6 +899,14 @@ package colabora.oaprendizagem.audionarrativa.display
 				this.stage.addChild(this._telaEscolha);
 				this._telaEscolha.mostrarLixeira();
 			}
+		}
+		
+		/**
+		 * Clique no botão de ajuda.
+		 */
+		private function acAjuda():void
+		{
+			this.stage.addChild(this._telaAjuda);
 		}
 		
 		/**

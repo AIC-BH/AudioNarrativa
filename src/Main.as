@@ -40,7 +40,7 @@ package
 		/**
 		 * App funcionando em um computador?
 		 */
-		public static var desktop:Boolean = false;
+		public static var desktop:Boolean = true;
 		
 		/**
 		 * Tela do app.
@@ -81,6 +81,9 @@ package
 													Main.graficos.getSPGR('MensagemErroDownload'), 
 													Main.graficos.getSPGR('MensagemSucessoDownload'), 
 													Main.graficos.getSPGR('MensagemAguardeDownload'));
+			
+			// verifincando o projeto de exemplo
+			ObjetoAprendizagem.copiaExemplo('kasai');
 			
 			// criando o projeto atual
 			Main.projeto = new AudioNarrativa();
