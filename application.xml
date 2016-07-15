@@ -5,7 +5,7 @@
   <versionNumber>0.1</versionNumber>
   <supportedProfiles>mobileDevice</supportedProfiles>
   <filename>AudioNarrativa</filename>
-  <name>AudioNarrativa</name>
+  <name>Áudio Narrativas</name>
   <android>
     <manifestAdditions><![CDATA[<manifest android:installLocation="auto">
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />

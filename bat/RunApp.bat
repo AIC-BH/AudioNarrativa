@@ -21,8 +21,9 @@ set INTERPRETER=-interpreter
 :desktop
 :: http://help.adobe.com/en_US/air/build/WSfffb011ac560372f-6fa6d7e0128cca93d31-8000.html
 
-set SCREEN_SIZE=NexusOne
-::set SCREEN_SIZE=iPhoneRetina
+::set SCREEN_SIZE=NexusOne
+::set SCREEN_SIZE = iPhoneRetina
+set SCREEN_SIZE=1280x720:720x1280
 
 :desktop-run
 echo.

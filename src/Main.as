@@ -83,7 +83,7 @@ package
 													Main.graficos.getSPGR('MensagemAguardeDownload'));
 			
 			// verifincando o projeto de exemplo
-			ObjetoAprendizagem.copiaExemplo('kasai');
+			ObjetoAprendizagem.copiaExemplo('exemplo-kasai');
 			
 			// criando o projeto atual
 			Main.projeto = new AudioNarrativa();

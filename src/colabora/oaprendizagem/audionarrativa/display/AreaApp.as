@@ -4,6 +4,7 @@ package colabora.oaprendizagem.audionarrativa.display
 	import art.ciclope.io.FileBrowser;
 	import colabora.display.EscolhaProjeto;
 	import colabora.display.TelaAjuda;
+	import colabora.display.TelaHelpInicio;
 	import colabora.display.TelaMensagem;
 	import colabora.oaprendizagem.dados.ObjetoAprendizagem;
 	import flash.display.Bitmap;
@@ -75,6 +76,7 @@ package colabora.oaprendizagem.audionarrativa.display
 		private var _telaMeusAudios:TelaMeusAudios;
 		private var _telaGravacao:TelaGravacao;
 		private var _telaInfo:TelaInfo;
+		private var _ajudainloco:TelaHelpInicio;
 		
 		
 		private var _acoes:ActionArea;
@@ -297,8 +299,12 @@ package colabora.oaprendizagem.audionarrativa.display
 			// dados persistentes
 			this._save = new PersistentData(ObjetoAprendizagem.codigo);
 			if (this._save.isSet('ultimo')) {
-				if (Main.projeto.carregaProjeto(this._save.getValue('ultimo'))) this.desenhaTrilhas();
+				//if (Main.projeto.carregaProjeto(this._save.getValue('ultimo'))) this.desenhaTrilhas();
 			}
+			
+			// ajuda in-loco
+			this._ajudainloco = new TelaHelpInicio(Main.graficos.getGR('AJUDAINLOCO'));
+			this.addChild(this._ajudainloco);
 		}
 		
 		/**
@@ -941,6 +947,11 @@ package colabora.oaprendizagem.audionarrativa.display
 			if (Main.projeto.titulo == '') {
 				this._acAtual = 'aviso falta titulo';
 				this._telaMensagem.defineMensagem('<b>Um probleminha...</b><br />&nbsp;<br />Sua narrativa ainda não tem um título e não posso gravá-la. Para dar um nome, toque no botão de informações.');
+				this.addChild(this._telaMensagem);
+				this.removeChild(this._telaPrincipal);
+			} else if (Main.projeto.id == 'exemplo-kasai') {
+				this._acAtual = 'aviso projeto exemplo';
+				this._telaMensagem.defineMensagem('<b>Um probleminha...</b><br />&nbsp;<br />Alterações no projeto de exemplo não podem ser gravadas.');
 				this.addChild(this._telaMensagem);
 				this.removeChild(this._telaPrincipal);
 			} else {

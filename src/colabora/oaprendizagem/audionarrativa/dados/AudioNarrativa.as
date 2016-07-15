@@ -286,15 +286,17 @@ package colabora.oaprendizagem.audionarrativa.dados
 		 */
 		public function salvar():void
 		{
-			// a pasta de gravação existe?
-			if (!this.pasta.isDirectory) this.pasta.createDirectory();
-			// a pasta de áudios próprios do projeto existe?
-			if (!this.pasta.resolvePath('audios').isDirectory) this.pasta.resolvePath('audios').createDirectory();
-			// salvando dados do projeto
-			var stream:FileStream = new FileStream();
-			stream.open(this.pasta.resolvePath('projeto.json'), FileMode.WRITE);
-			stream.writeUTFBytes(JSON.stringify(this.dados));
-			stream.close();
+			if (this.titulo != '') {
+				// a pasta de gravação existe?
+				if (!this.pasta.isDirectory) this.pasta.createDirectory();
+				// a pasta de áudios próprios do projeto existe?
+				if (!this.pasta.resolvePath('audios').isDirectory) this.pasta.resolvePath('audios').createDirectory();
+				// salvando dados do projeto
+				var stream:FileStream = new FileStream();
+				stream.open(this.pasta.resolvePath('projeto.json'), FileMode.WRITE);
+				stream.writeUTFBytes(JSON.stringify(this.dados));
+				stream.close();
+			}
 		}
 		
 		/**
